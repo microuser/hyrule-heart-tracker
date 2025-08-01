@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Micro's OOT Hyrule Heart Tracker 🗡️</title>
+    <title>🧝‍♂️ Link's Heart Quest Tracker 🗡️</title>
     <style>
         body {
             background: linear-gradient(45deg, #2d5016, #4a6741, #1a4c96);
@@ -132,6 +132,7 @@
             height: 20px;
             margin-right: 15px;
             accent-color: #FFD700;
+            flex-shrink: 0;
         }
 
         .heart-number {
@@ -139,15 +140,128 @@
             font-weight: bold;
             margin-right: 10px;
             min-width: 30px;
+            flex-shrink: 0;
         }
 
         .heart-emoji {
             font-size: 1.5em;
             margin-right: 10px;
+            flex-shrink: 0;
         }
 
         .heart-description {
             flex-grow: 1;
+        }
+
+        /* Mobile Portrait Optimization */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .heart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .heart-top-row {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .heart-checkbox {
+                width: 24px;
+                height: 24px;
+                margin-right: 12px;
+            }
+
+            .heart-number {
+                font-size: 1.1em;
+                margin-right: 8px;
+                min-width: auto;
+            }
+
+            .heart-emoji {
+                font-size: 1.8em;
+                margin-right: 12px;
+            }
+
+            .heart-description {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .location {
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+
+            .requirements {
+                font-size: 0.95em;
+                margin-bottom: 8px;
+            }
+
+            .detailed-description {
+                font-size: 0.9em;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
+
+            .reference-link, .video-link {
+                display: block;
+                margin: 5px 0;
+                text-align: center;
+                padding: 8px 12px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .section-title {
+                font-size: 1.3em;
+                text-align: center;
+            }
+
+            .progression-section {
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+
+            .save-section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 8px 0;
+                padding: 12px;
+                text-align: center;
+            }
+
+            .code-input {
+                font-size: 12px;
+                padding: 12px;
+            }
+        }
+
+        /* Mobile Landscape */
+        @media screen and (max-width: 1024px) and (orientation: landscape) {
+            .heart-item {
+                padding: 8px;
+                margin: 8px 0;
+            }
+
+            .detailed-description {
+                font-size: 0.8em;
+            }
         }
 
         .location {
@@ -224,7 +338,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title"> Micro's OOT Hyrule Heart Tracker  🗡️</h1>
+            <h1 class="title">🧝‍♂️ Link's Heart Quest Tracker 🗡️</h1>
             <p>🏰 Hyrule's Most Comprehensive Heart Piece Guide 🏰</p>
             <div class="stats">
                 <span id="heartCount">0</span>/36 Heart Pieces Collected
@@ -248,9 +362,11 @@
             <div class="section-title">🌱 Early Child Link (Basic Items) 🌱</div>
             
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="1">
-                <span class="heart-number">#1</span>
-                <span class="heart-emoji">⚰️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="1">
+                    <span class="heart-number">#1</span>
+                    <span class="heart-emoji">⚰️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Graveyard - Royal Family's Tomb</div>
                     <div class="requirements">Requirements: Sun's Song, Young or Adult Link, Night time</div>
@@ -260,9 +376,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="2">
-                <span class="heart-number">#2</span>
-                <span class="heart-emoji">👻</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="2">
+                    <span class="heart-number">#2</span>
+                    <span class="heart-emoji">👻</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Graveyard - Dampé's Digging Game</div>
                     <div class="requirements">Requirements: 10+ Rupees per attempt, Young Link only, Night time (18:00-21:00)</div>
@@ -272,9 +390,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="3">
-                <span class="heart-number">#3</span>
-                <span class="heart-emoji">🐎</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="3">
+                    <span class="heart-number">#3</span>
+                    <span class="heart-emoji">🐎</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Lon Lon Ranch - Storage Building</div>
                     <div class="requirements">Requirements: Young Link, access to Lon Lon Ranch</div>
@@ -284,9 +404,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="4">
-                <span class="heart-number">#4</span>
-                <span class="heart-emoji">🌲</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="4">
+                    <span class="heart-number">#4</span>
+                    <span class="heart-emoji">🌲</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Lost Woods - Skull Kid Musical Challenge</div>
                     <div class="requirements">Requirements: Fairy Ocarina, Young Link</div>
@@ -296,9 +418,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="5">
-                <span class="heart-number">#5</span>
-                <span class="heart-emoji">🌲</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="5">
+                    <span class="heart-number">#5</span>
+                    <span class="heart-emoji">🌲</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Lost Woods - Saria's Song Friendship</div>
                     <div class="requirements">Requirements: Saria's Song, Young Link</div>
@@ -308,9 +432,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="6">
-                <span class="heart-number">#6</span>
-                <span class="heart-emoji">🏰</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="6">
+                    <span class="heart-number">#6</span>
+                    <span class="heart-emoji">🏰</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Hyrule Market - Lost Dog Return</div>
                     <div class="requirements">Requirements: Young Link, Night time</div>
@@ -320,9 +446,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="7">
-                <span class="heart-number">#7</span>
-                <span class="heart-emoji">🪨</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="7">
+                    <span class="heart-number">#7</span>
+                    <span class="heart-emoji">🪨</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Goron City - Spinning Urn Challenge</div>
                     <div class="requirements">Requirements: Young Link, Goron's Bracelet, access to Darunia's chamber</div>
@@ -336,9 +464,11 @@
             <div class="section-title">🎯 Child Link with Advanced Items 🎯</div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="8">
-                <span class="heart-number">#8</span>
-                <span class="heart-emoji">⛰️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="8">
+                    <span class="heart-number">#8</span>
+                    <span class="heart-emoji">⛰️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Death Mountain Trail - Above Dodongo's Cavern</div>
                     <div class="requirements">Requirements: Young Link (backflip method) or Adult Link (Magic Bean method)</div>
@@ -348,9 +478,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="9">
-                <span class="heart-number">#9</span>
-                <span class="heart-emoji">🏠</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="9">
+                    <span class="heart-number">#9</span>
+                    <span class="heart-emoji">🏠</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Village - Impa's House Rooftop</div>
                     <div class="requirements">Requirements: Owl ride from Death Mountain (Young Link) or Hookshot (Adult Link)</div>
@@ -360,9 +492,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="10">
-                <span class="heart-number">#10</span>
-                <span class="heart-emoji">🌋</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="10">
+                    <span class="heart-number">#10</span>
+                    <span class="heart-emoji">🌋</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Death Mountain Crater - Alcove Heart</div>
                     <div class="requirements">Requirements: Young Link (timed dash) or Adult Link with Goron Tunic</div>
@@ -372,9 +506,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="11">
-                <span class="heart-number">#11</span>
-                <span class="heart-emoji">💣</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="11">
+                    <span class="heart-number">#11</span>
+                    <span class="heart-emoji">💣</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Hyrule Market - Bombchu Bowling Prize</div>
                     <div class="requirements">Requirements: Young Link, completion of Dodongo's Cavern, 30 Rupees per game</div>
@@ -384,9 +520,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="12">
-                <span class="heart-number">#12</span>
-                <span class="heart-emoji">🕳️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="12">
+                    <span class="heart-number">#12</span>
+                    <span class="heart-emoji">🕳️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Hyrule Field - Hidden Business Scrub</div>
                     <div class="requirements">Requirements: Bombs, 10 Rupees, Shard/Stone of Agony helpful</div>
@@ -464,9 +602,11 @@
             <div class="section-title">🎣 Mini-Games & Skills 🎣</div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="18">
-                <span class="heart-number">#18</span>
-                <span class="heart-emoji">🎣</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="18">
+                    <span class="heart-number">#18</span>
+                    <span class="heart-emoji">🎣</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Lake Hylia - Fishing Champion</div>
                     <div class="requirements">Requirements: Young Link, 20 Rupees, fishing skill</div>
@@ -476,9 +616,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="19">
-                <span class="heart-number">#19</span>
-                <span class="heart-emoji">📦</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="19">
+                    <span class="heart-number">#19</span>
+                    <span class="heart-emoji">📦</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Hyrule Market - Treasure Chest Game</div>
                     <div class="requirements">Requirements: Young Link, night time, Lens of Truth highly recommended</div>
@@ -488,9 +630,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="20">
-                <span class="heart-number">#20</span>
-                <span class="heart-emoji">🕷️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="20">
+                    <span class="heart-number">#20</span>
+                    <span class="heart-emoji">🕷️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">House of Skulltula - 50 Gold Skulltula Reward</div>
                     <div class="requirements">Requirements: 50 Gold Skulltula Tokens</div>
@@ -504,9 +648,11 @@
             <div class="section-title">🏜️ Gerudo Valley Adventures 🏜️</div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="21">
-                <span class="heart-number">#21</span>
-                <span class="heart-emoji">💦</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="21">
+                    <span class="heart-number">#21</span>
+                    <span class="heart-emoji">💦</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Gerudo Valley - Waterfall Alcove</div>
                     <div class="requirements">Requirements: None (multiple access methods)</div>
@@ -516,9 +662,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="22">
-                <span class="heart-number">#22</span>
-                <span class="heart-emoji">📦</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="22">
+                    <span class="heart-number">#22</span>
+                    <span class="heart-emoji">📦</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Gerudo Valley - Platform Crate</div>
                     <div class="requirements">Requirements: Cucco (Young Link) or Longshot (Adult Link)</div>
@@ -532,9 +680,11 @@
             <div class="section-title">🗡️ Adult Link - Basic Adult Items 🗡️</div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="23">
-                <span class="heart-number">#23</span>
-                <span class="heart-emoji">⚰️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="23">
+                    <span class="heart-number">#23</span>
+                    <span class="heart-emoji">⚰️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Graveyard - Magic Bean Platform</div>
                     <div class="requirements">Requirements: Adult Link, Magic Bean planted as child</div>
@@ -544,9 +694,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="24">
-                <span class="heart-number">#24</span>
-                <span class="heart-emoji">👻</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="24">
+                    <span class="heart-number">#24</span>
+                    <span class="heart-emoji">👻</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Dampé's Ghost Race - Under One Minute</div>
                     <div class="requirements">Requirements: Adult Link, Hookshot, racing skill</div>
@@ -556,9 +708,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="25">
-                <span class="heart-number">#25</span>
-                <span class="heart-emoji">🌪️</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="25">
+                    <span class="heart-number">#25</span>
+                    <span class="heart-emoji">🌪️</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Village - Windmill Platform</div>
                     <div class="requirements">Requirements: Boomerang (Young Link) or completion of Dampé's ghost race (Adult Link)</div>
@@ -568,9 +722,11 @@
             </div>
 
             <div class="heart-item">
-                <input type="checkbox" class="heart-checkbox" data-heart="26">
-                <span class="heart-number">#26</span>
-                <span class="heart-emoji">🏠</span>
+                <div class="heart-top-row">
+                    <input type="checkbox" class="heart-checkbox" data-heart="26">
+                    <span class="heart-number">#26</span>
+                    <span class="heart-emoji">🏠</span>
+                </div>
                 <div class="heart-description">
                     <div class="location">Kakariko Village - Rooftop Conversation</div>
                     <div class="requirements">Requirements: Adult Link, Hookshot/Longshot</div>
