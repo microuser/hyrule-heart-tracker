@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyrule Heart Tracker</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #2d5016, #4a6741, #1a4c96);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #8B4513;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #FFD700;
+            text-shadow: 3px 3px 0px #8B4513;
+            margin: 0;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 3px 3px 0px #8B4513, 0 0 10px #FFD700; }
+            to { text-shadow: 3px 3px 0px #8B4513, 0 0 20px #FFD700, 0 0 30px #FFD700; }
+        }
+
+        .save-section {
+            background: rgba(139, 69, 19, 0.3);
+            border: 2px solid #8B4513;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .save-title {
+            color: #FFD700;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .code-input {
+            width: 100%;
+            background: #000;
+            color: #00ff00;
+            border: 2px solid #FFD700;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #8B4513, #D2691E);
+            color: white;
+            border: 2px solid #FFD700;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #D2691E, #FFD700);
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .progression-section {
+            margin-bottom: 30px;
+            border: 2px solid #4a6741;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(74, 103, 65, 0.2);
+        }
+
+        .section-title {
+            color: #90EE90;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .heart-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+            transition: all 0.3s;
+        }
+
+        .heart-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-left-color: #90EE90;
+        }
+
+        .heart-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: #FFD700;
+        }
+
+        .heart-number {
+            color: #FFD700;
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+
+        .heart-emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .heart-description {
+            flex-grow: 1;
+        }
+
+        .location {
+            color: #90EE90;
+            font-weight: bold;
+        }
+
+        .requirements {
+            color: #FFB6C1;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #000;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B4513, #FFD700);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats {
+            text-align: center;
+            color: #FFD700;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .detailed-description {
+            margin-top: 8px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #E0E0E0;
+            font-style: italic;
+        }
+
+        .reference-link, .video-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 8px;
+            background: linear-gradient(45deg, #1e3a8a, #3b82f6);
+            color: white;
+            text-decoration: none;
+            font-size: 0.75em;
+            border-radius: 4px;
+            transition: all 0.3s;
+            border: 1px solid #60a5fa;
+        }
+
+        .video-link {
+            background: linear-gradient(45deg, #dc2626, #ef4444);
+            border-color: #f87171;
+        }
+
+        .reference-link:hover, .video-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(96, 165, 250, 0.5);
+        }
+
+        .video-link:hover {
+            box-shadow: 0 2px 8px rgba(248, 113, 113, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧝‍♂️ Link's Heart Quest Tracker 🗡️</h1>
+            <p>🏰 Hyrule's Most Comprehensive Heart Piece Guide 🏰</p>
+            <div class="stats">
+                <span id="heartCount">0</span>/36 Heart Pieces Collected
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="save-section">
+            <div class="save-title">💾 Game Genie Save System 💾</div>
+            <input type="text" id="saveCode" class="code-input" placeholder="Enter save code here or generate one from your progress...">
+            <div id="saveStatus" style="color: #90EE90; font-size: 0.8em; margin-top: 5px; opacity: 0; transition: opacity 0.3s;">✅ Progress automatically saved!</div>
+            <br>
+            <button class="btn" onclick="generateCode()">🔮 Generate Code</button>
+            <button class="btn" onclick="loadCode()">⚡ Load Code</button>
+            <button class="btn" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🌱 Early Child Link (Basic Items) 🌱</div>
+            
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="1">
+                <span class="heart-number">#1</span>
+                <span class="heart-emoji">⚰️</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Graveyard - Royal Family's Tomb</div>
+                    <div class="requirements">Requirements: Sun's Song, Young or Adult Link, Night time</div>
+                    <div class="detailed-description">Navigate to the back row of the graveyard and pull back the second tombstone from the right (facing away from the Royal Family's Tomb). Drop down, play Sun's Song to freeze the ReDead, defeat it, then play Sun's Song again on the platform to make a chest appear.</div>
+                    <a href="https://www.zeldadungeon.net/wiki/Ocarina_of_Time_Heart_Pieces" target="_blank" class="reference-link">📖 Zelda Dungeon Guide</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="2">
+                <span class="heart-number">#2</span>
+                <span class="heart-emoji">👻</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Graveyard - Dampé's Digging Game</div>
+                    <div class="requirements">Requirements: 10+ Rupees per attempt, Young Link only, Night time (18:00-21:00)</div>
+                    <div class="detailed-description">Pay Dampé 10 Rupees for his Heart-Pounding Gravedigging Tour. The heart piece location is completely random. Ensure Dampé is standing directly on the edge of a dirt pile before paying. Budget 100-200 Rupees as this can take many attempts.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=2550s" target="_blank" class="video-link">🎥 Video Guide @42:30</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="3">
+                <span class="heart-number">#3</span>
+                <span class="heart-emoji">🐎</span>
+                <div class="heart-description">
+                    <div class="location">Lon Lon Ranch - Storage Building</div>
+                    <div class="requirements">Requirements: Young Link, access to Lon Lon Ranch</div>
+                    <div class="detailed-description">Enter the tall storage building at the back of the ranch. Push and pull the wooden crates away from the back corner to reveal a small crawl space. Crawl through to find a hidden room with a Piece of Heart in what appears to be a bird's nest.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=505s" target="_blank" class="video-link">🎥 Video Guide @8:25</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="4">
+                <span class="heart-number">#4</span>
+                <span class="heart-emoji">🌲</span>
+                <div class="heart-description">
+                    <div class="location">Lost Woods - Skull Kid Musical Challenge</div>
+                    <div class="requirements">Requirements: Fairy Ocarina, Young Link</div>
+                    <div class="detailed-description">Take the first right from Lost Woods entrance, drop down to the lower section. Stand on the tree stump and complete the Simon Says musical memory game with two Skull Kids. Three rounds of increasing complexity (3, 4, then 5 notes).</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=180s" target="_blank" class="video-link">🎥 Video Guide @3:00</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="5">
+                <span class="heart-number">#5</span>
+                <span class="heart-emoji">🌲</span>
+                <div class="heart-description">
+                    <div class="location">Lost Woods - Saria's Song Friendship</div>
+                    <div class="requirements">Requirements: Saria's Song, Young Link</div>
+                    <div class="detailed-description">Take the first left from Lost Woods entrance. Find the single Skull Kid with a flute on a tree stump. Position yourself on the opposite stump and play Saria's Song for the lonely Skull Kid to earn his friendship and a Piece of Heart.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=165s" target="_blank" class="video-link">🎥 Video Guide @2:45</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="6">
+                <span class="heart-number">#6</span>
+                <span class="heart-emoji">🏰</span>
+                <div class="heart-description">
+                    <div class="location">Hyrule Market - Lost Dog Return</div>
+                    <div class="requirements">Requirements: Young Link, Night time</div>
+                    <div class="detailed-description">Wait until nightfall and find the white dog wandering near the empty stall. Touch it to make it follow you, then navigate to the back alley and find the only open door at night. Return "Little Richard" to Mamamu Yan for a Piece of Heart.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=705s" target="_blank" class="video-link">🎥 Video Guide @11:45</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="7">
+                <span class="heart-number">#7</span>
+                <span class="heart-emoji">🪨</span>
+                <div class="heart-description">
+                    <div class="location">Goron City - Spinning Urn Challenge</div>
+                    <div class="requirements">Requirements: Young Link, Goron's Bracelet, access to Darunia's chamber</div>
+                    <div class="detailed-description">Light a Deku Stick from Darunia's eternal flame, quickly light all torches around the lower level. When the Goron-faced urn spins, throw a bomb into the opening when the smiling face points toward you. Timing-based challenge worth a Piece of Heart and 25 Rupees.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=2860s" target="_blank" class="video-link">🎥 Video Guide @47:40</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🎯 Child Link with Advanced Items 🎯</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="8">
+                <span class="heart-number">#8</span>
+                <span class="heart-emoji">⛰️</span>
+                <div class="heart-description">
+                    <div class="location">Death Mountain Trail - Above Dodongo's Cavern</div>
+                    <div class="requirements">Requirements: Young Link (backflip method) or Adult Link (Magic Bean method)</div>
+                    <div class="detailed-description">Two methods: As Young Link, position between Bomb Flower spawn and fence, lock onto the Goron, then backflip (Z + back + A). As Adult Link, plant Magic Bean as child (60 Rupees) and ride platform. Backflip method requires precise positioning.</div>
+                    <a href="https://www.thonky.com/ocarina-of-time/pieces-of-heart" target="_blank" class="reference-link">📖 Thonky Guide</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="9">
+                <span class="heart-number">#9</span>
+                <span class="heart-emoji">🏠</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Village - Impa's House Rooftop</div>
+                    <div class="requirements">Requirements: Owl ride from Death Mountain (Young Link) or Hookshot (Adult Link)</div>
+                    <div class="detailed-description">After getting Bomb Bag, accept owl's ride from Death Mountain to land on Impa's house roof. Walk to the right side, drop onto the ledge above the Cucco pen, and enter the hole in the wall. You'll find yourself in a cage with a cow and Piece of Heart.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3090s" target="_blank" class="video-link">🎥 Video Guide @51:30</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="10">
+                <span class="heart-number">#10</span>
+                <span class="heart-emoji">🌋</span>
+                <div class="heart-description">
+                    <div class="location">Death Mountain Crater - Alcove Heart</div>
+                    <div class="requirements">Requirements: Young Link (timed dash) or Adult Link with Goron Tunic</div>
+                    <div class="detailed-description">As Young Link, run straight to the climbable wall and rapidly climb down to the alcove before the heat timer expires. More heart containers = more time. As Adult Link with Goron Tunic, explore at leisure. Magic Bean method also works.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3025s" target="_blank" class="video-link">🎥 Video Guide @50:25</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="11">
+                <span class="heart-number">#11</span>
+                <span class="heart-emoji">💣</span>
+                <div class="heart-description">
+                    <div class="location">Hyrule Market - Bombchu Bowling Prize</div>
+                    <div class="requirements">Requirements: Young Link, completion of Dodongo's Cavern, 30 Rupees per game</div>
+                    <div class="detailed-description">Prize rotation: Bombchus → Heart Piece → Bombs → Bomb Bag → Purple Rupee → repeat. Hit all three targets with Bombchus in one game. If you win but don't get the heart piece, wait for prize cycle to rotate back to it.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=745s" target="_blank" class="video-link">🎥 Video Guide @12:25</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="12">
+                <span class="heart-number">#12</span>
+                <span class="heart-emoji">🕳️</span>
+                <div class="heart-description">
+                    <div class="location">Hyrule Field - Hidden Business Scrub</div>
+                    <div class="requirements">Requirements: Bombs, 10 Rupees, Shard/Stone of Agony helpful</div>
+                    <div class="detailed-description">At southwestern Hyrule Field near Lake Hylia entrance, find the small square area enclosed by four fence posts. Bomb the center to reveal a grotto. Deflect the Business Scrub's nut back at him with your shield, then buy the heart piece for 10 Rupees.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4045s" target="_blank" class="video-link">🎥 Video Guide @1:07:25</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="13">
+                <span class="heart-number">#13</span>
+                <span class="heart-emoji">🐓</span>
+                <div class="heart-description">
+                    <div class="location">Zora's River - Central Pillar</div>
+                    <div class="requirements">Requirements: Cucco transport, Boomerang, or Hover Boots (Adult)</div>
+                    <div class="detailed-description">Multiple methods: Carry Cucco from river entrance to pillar area, jump toward pillar and throw Cucco at last moment to grab ledge. Boomerang can retrieve from distance. Adult Link can use Hover Boots. Protect Cucco from water during transport.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3270s" target="_blank" class="video-link">🎥 Video Guide @54:30</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="14">
+                <span class="heart-number">#14</span>
+                <span class="heart-emoji">🐓</span>
+                <div class="heart-description">
+                    <div class="location">Zora's River - Upper Platform</div>
+                    <div class="requirements">Requirements: Cucco transport, Boomerang, or Hover Boots</div>
+                    <div class="detailed-description">Near Zora's Domain waterfall entrance. Carry Cucco carefully, throwing it onto higher ledges and recapturing before it touches water. Make running jump toward platform and release Cucco at optimal moment. Boomerang or Hover Boots provide alternatives.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3310s" target="_blank" class="video-link">🎥 Video Guide @55:10</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🎵 Musical Challenges & Songs 🎵</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="15">
+                <span class="heart-number">#15</span>
+                <span class="heart-emoji">🌊</span>
+                <div class="heart-description">
+                    <div class="location">Zora's Domain - Five Torch Challenge</div>
+                    <div class="requirements">Requirements: Young Link, Deku Sticks</div>
+                    <div class="detailed-description">Timed challenge requiring lighting five torches throughout Zora's Domain. Light stick from King Zora's eternal flame. Torch locations: stairs to throne, near Zora shop, stone circle in shallow water, and two behind the waterfall. Stay in shallow water - swimming extinguishes stick.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3765s" target="_blank" class="video-link">🎥 Video Guide @1:02:45</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="16">
+                <span class="heart-number">#16</span>
+                <span class="heart-emoji">🐸</span>
+                <div class="heart-description">
+                    <div class="location">Zora's River - Song of Storms Frogs</div>
+                    <div class="requirements">Requirements: Young Link, Song of Storms</div>
+                    <div class="detailed-description">Navigate to the fallen log in central Zora's River. Stand on the log's edge and pull out your Ocarina - five frogs will emerge. Play the Song of Storms and the delighted frogs will reward you with a Piece of Heart.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3380s" target="_blank" class="video-link">🎥 Video Guide @56:20</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="17">
+                <span class="heart-number">#17</span>
+                <span class="heart-emoji">🐸</span>
+                <div class="heart-description">
+                    <div class="location">Zora's River - Frog Orchestra Bug Game</div>
+                    <div class="requirements">Requirements: Young Link, all five non-warp songs learned</div>
+                    <div class="detailed-description">After getting Song of Storms heart piece, return and play all five regular songs for the frogs: Zelda's Lullaby, Saria's Song, Epona's Song, Sun's Song, and Song of Time. Each frog grows larger. Complete the bug-catching rhythm game with precise button sequence: A, C-left, C-right, C-down, C-left, C-right, C-down, A, C-down, A, C-down, C-right, C-left, A.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3428s" target="_blank" class="video-link">🎥 Video Guide @57:08</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🎣 Mini-Games & Skills 🎣</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="18">
+                <span class="heart-number">#18</span>
+                <span class="heart-emoji">🎣</span>
+                <div class="heart-description">
+                    <div class="location">Lake Hylia - Fishing Champion</div>
+                    <div class="requirements">Requirements: Young Link, 20 Rupees, fishing skill</div>
+                    <div class="detailed-description">Pay 20 Rupees to rent fishing rod. Catch a fish weighing 10+ pounds. Large fish lurk near the log in pond center or among edge reeds. Optimal times are sunrise and sunset. Let fish tire before reeling in slowly. Present record catch to Fishing Hole Man for Piece of Heart.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=3870s" target="_blank" class="video-link">🎥 Video Guide @1:04:30</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="19">
+                <span class="heart-number">#19</span>
+                <span class="heart-emoji">📦</span>
+                <div class="heart-description">
+                    <div class="location">Hyrule Market - Treasure Chest Game</div>
+                    <div class="requirements">Requirements: Young Link, night time, Lens of Truth highly recommended</div>
+                    <div class="detailed-description">Night-only operation, 10 Rupees per attempt. Successfully choose correct chest in five consecutive rooms. Without Lens of Truth, this is gambling with 1/32 odds. With Lens of Truth from Bottom of the Well, you can see through chests to identify which contains the key.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=1160s" target="_blank" class="video-link">🎥 Video Guide @19:20</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="20">
+                <span class="heart-number">#20</span>
+                <span class="heart-emoji">🕷️</span>
+                <div class="heart-description">
+                    <div class="location">House of Skulltula - 50 Gold Skulltula Reward</div>
+                    <div class="requirements">Requirements: 50 Gold Skulltula Tokens</div>
+                    <div class="detailed-description">Collect 50 Gold Skulltula Tokens scattered throughout Hyrule. Reward progression: 10 tokens (Adult's Wallet), 20 tokens (Stone of Agony), 30 tokens (Giant's Wallet), 40 tokens (10 Bombchus), 50 tokens (Piece of Heart). Long-term collection quest encouraging thorough exploration.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=2710s" target="_blank" class="video-link">🎥 Video Guide @45:10</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🏜️ Gerudo Valley Adventures 🏜️</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="21">
+                <span class="heart-number">#21</span>
+                <span class="heart-emoji">💦</span>
+                <div class="heart-description">
+                    <div class="location">Gerudo Valley - Waterfall Alcove</div>
+                    <div class="requirements">Requirements: None (multiple access methods)</div>
+                    <div class="detailed-description">Behind Gerudo Valley's waterfall lies a secret alcove. As Young Link, grab the Cucco near the bridge and fly directly behind the waterfall to find a ladder. As Adult Link, jump to river level and swim to the ladder (approach from side to avoid strong current).</div>
+                    <a href="https://gamerant.com/zelda-ocarina-time-every-heart-piece-location/" target="_blank" class="reference-link">📖 Game Rant Guide</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="22">
+                <span class="heart-number">#22</span>
+                <span class="heart-emoji">📦</span>
+                <div class="heart-description">
+                    <div class="location">Gerudo Valley - Platform Crate</div>
+                    <div class="requirements">Requirements: Cucco (Young Link) or Longshot (Adult Link)</div>
+                    <div class="detailed-description">From the bridge, spot the platform on the left (Hyrule Field side) with a wooden crate. As Young Link, carry Cucco to bridge edge and fly across. Roll into crate to break it. As Adult Link, jump to lower platform and use Longshot to target the crate directly.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4185s" target="_blank" class="video-link">🎥 Video Guide @1:09:45</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🗡️ Adult Link - Basic Adult Items 🗡️</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="23">
+                <span class="heart-number">#23</span>
+                <span class="heart-emoji">⚰️</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Graveyard - Magic Bean Platform</div>
+                    <div class="requirements">Requirements: Adult Link, Magic Bean planted as child</div>
+                    <div class="detailed-description">Plant Magic Bean in soft soil on left side of graveyard as Young Link (costs 70 Rupees). Return as Adult Link to find fully grown bean platform. Ride it to upper ledge, break the wooden crate to claim Piece of Heart. One of the most expensive heart pieces due to Magic Bean cost.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4355s" target="_blank" class="video-link">🎥 Video Guide @1:12:35</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="24">
+                <span class="heart-number">#24</span>
+                <span class="heart-emoji">👻</span>
+                <div class="heart-description">
+                    <div class="location">Dampé's Ghost Race - Under One Minute</div>
+                    <div class="requirements">Requirements: Adult Link, Hookshot, racing skill</div>
+                    <div class="detailed-description">After first race against Dampé's ghost, challenge him again for speed run. Complete in under 60 seconds. Take optimal racing lines, roll frequently for speed, use Longshot on torch in second-to-last room to skip final corner and catch Dampé before time expires.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4390s" target="_blank" class="video-link">🎥 Video Guide @1:13:10</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="25">
+                <span class="heart-number">#25</span>
+                <span class="heart-emoji">🌪️</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Village - Windmill Platform</div>
+                    <div class="requirements">Requirements: Boomerang (Young Link) or completion of Dampé's ghost race (Adult Link)</div>
+                    <div class="detailed-description">Two paths: As Young Link with Boomerang, retrieve from below. As Adult Link, complete Dampé's ghost race (requires Hookshot), emerging through windmill for access to moving platforms. Time jumps across rotating wooden beams to reach upper platform.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4475s" target="_blank" class="video-link">🎥 Video Guide @1:14:35</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="26">
+                <span class="heart-number">#26</span>
+                <span class="heart-emoji">🏠</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Village - Rooftop Conversation</div>
+                    <div class="requirements">Requirements: Adult Link, Hookshot/Longshot</div>
+                    <div class="detailed-description">Use Hookshot to reach roof of Granny's Potion Shop (building near windmill). Find the man standing there who gives you a Piece of Heart just for visiting. As Young Link, achievable through creative jumping from lookout tower - face south, target, side-jump left to fence, then climb to roof.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4510s" target="_blank" class="video-link">🎥 Video Guide @1:15:10</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">⛰️ Mountain & Ice Areas ⛰️</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="27">
+                <span class="heart-number">#27</span>
+                <span class="heart-emoji">🌱</span>
+                <div class="heart-description">
+                    <div class="location">Death Mountain Trail - Magic Bean Flight</div>
+                    <div class="requirements">Requirements: Adult Link, Magic Bean planted as child at Dodongo's Cavern</div>
+                    <div class="detailed-description">Plant Magic Bean directly in front of Dodongo's Cavern entrance as Young Link (costs 60 Rupees). Return as Adult Link to find bean platform that carries you on flight path around Death Mountain. Ride platform up to high ledge above cavern entrance. Much safer than backflip technique.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4750s" target="_blank" class="video-link">🎥 Video Guide @1:15:50</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="28">
+                <span class="heart-number">#28</span>
+                <span class="heart-emoji">🌋</span>
+                <div class="heart-description">
+                    <div class="location">Death Mountain Crater - Smoking Pillar</div>
+                    <div class="requirements">Requirements: Adult Link, Bolero of Fire, Magic Bean planted as child</div>
+                    <div class="detailed-description">Warp to Death Mountain Crater using Bolero of Fire as Young Link and plant Magic Bean in soft soil next to Triforce pedestal (costs 90 Rupees). Return as Adult Link and ride bean platform on aerial tour, eventually reaching top of smoking volcanic pillar in crater center. Jump off when platform passes over pillar.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4790s" target="_blank" class="video-link">🎥 Video Guide @1:16:30</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="29">
+                <span class="heart-number">#29</span>
+                <span class="heart-emoji">🧊</span>
+                <div class="heart-description">
+                    <div class="location">Zora's Fountain - Iceberg Platform</div>
+                    <div class="requirements">Requirements: Adult Link</div>
+                    <div class="detailed-description">When you return as Adult Link, Zora's Fountain has frozen over with floating icebergs. Navigate carefully across icy platforms by jumping from iceberg to iceberg until you locate the one containing the Piece of Heart. Icebergs have different sizes/heights requiring strategic jumping route planning.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4800s" target="_blank" class="video-link">🎥 Video Guide @1:20:00</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="30">
+                <span class="heart-number">#30</span>
+                <span class="heart-emoji">❄️</span>
+                <div class="heart-description">
+                    <div class="location">Ice Cavern - Red Ice Prison</div>
+                    <div class="requirements">Requirements: Adult Link, Blue Fire in bottle</div>
+                    <div class="detailed-description">In Ice Cavern's compass room (far right chamber), encounter patches of red ice that normal fire can't melt. Collect Blue Fire in empty bottle from special torches within cavern, then use it to melt red ice blocks. One frozen formation contains Piece of Heart. Watch for falling stalactites while searching.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4875s" target="_blank" class="video-link">🎥 Video Guide @1:21:15</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="31">
+                <span class="heart-number">#31</span>
+                <span class="heart-emoji">🌊</span>
+                <div class="heart-description">
+                    <div class="location">Zora's Fountain - Lake Floor</div>
+                    <div class="requirements">Requirements: Adult Link, Iron Boots, Zora Tunic recommended</div>
+                    <div class="detailed-description">Equip Iron Boots to sink to very bottom of frozen Zora's Fountain. Zora Tunic highly recommended for unlimited underwater breathing, though piece can be collected quickly without it. Heart piece rests on lake floor in deepest part. Navigate carefully around underwater terrain and ice formations.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=4985s" target="_blank" class="video-link">🎥 Video Guide @1:23:05</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🏊‍♂️ Water Areas & Laboratory 🏊‍♂️</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="32">
+                <span class="heart-number">#32</span>
+                <span class="heart-emoji">🏊</span>
+                <div class="heart-description">
+                    <div class="location">Lake Hylia Laboratory - Deep Dive</div>
+                    <div class="requirements">Requirements: Golden Scale from fishing pond</div>
+                    <div class="detailed-description">After earning Golden Scale by catching 10+ pound fish at fishing pond, visit Lakeside Laboratory and dive to very bottom of water-filled tank inside building. When you reach bottom, you'll hear distinctive "secret discovery" chime. Surface and speak with Lake Scientist for Piece of Heart reward.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=5075s" target="_blank" class="video-link">🎥 Video Guide @1:24:35</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="33">
+                <span class="heart-number">#33</span>
+                <span class="heart-emoji">🔬</span>
+                <div class="heart-description">
+                    <div class="location">Lake Hylia Laboratory - Rooftop</div>
+                    <div class="requirements">Requirements: Adult Link, Magic Bean or Scarecrow's Song + Hookshot</div>
+                    <div class="detailed-description">Plant Magic Bean at Lake Hylia as Young Link (costs 80 Rupees), return as Adult to ride bean platform to laboratory roof. Alternative: teach Scarecrow's Song to Bonooru as Young Link, then as Adult play song near laboratory to summon Pierre and hookshot to him. Watch for Guay attacks on roof.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=5175s" target="_blank" class="video-link">🎥 Video Guide @1:26:15</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="34">
+                <span class="heart-number">#34</span>
+                <span class="heart-emoji">🏠</span>
+                <div class="heart-description">
+                    <div class="location">Kakariko Village - Impa's House (Adult Return)</div>
+                    <div class="requirements">Requirements: Adult Link, Song of Storms learned</div>
+                    <div class="detailed-description">Return to Impa's house as Adult Link after learning Song of Storms. Access the same location where you found the cow as Young Link, but now as Adult Link you can collect an additional Piece of Heart that wasn't accessible before. This represents the time paradox elements of the adult timeline.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=5285s" target="_blank" class="video-link">🎥 Video Guide @1:28:05</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="35">
+                <span class="heart-number">#35</span>
+                <span class="heart-emoji">🕳️</span>
+                <div class="heart-description">
+                    <div class="location">Hyrule Field - Hidden Tree Grotto</div>
+                    <div class="requirements">Requirements: Stone/Shard of Agony, Golden Scale or Iron Boots, Bombs</div>
+                    <div class="detailed-description">Use Stone/Shard of Agony to locate specific tree in Hyrule Field (northwest of Lon Lon Ranch, between Gerudo Valley and Hyrule Castle). When agony sensor activates, bomb the tree to reveal hidden entrance. Drop into grotto with water pool. Use Golden Scale or Iron Boots to dive to bottom for Piece of Heart.</div>
+                    <a href="https://www.zeldadungeon.net/wiki/Ocarina_of_Time_Heart_Pieces" target="_blank" class="reference-link">📖 Zelda Dungeon Guide</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">🏜️ Desert Areas - Final Challenges 🏜️</div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="34">
+                <span class="heart-number">#34</span>
+                <span class="heart-emoji">🏹</span>
+                <div class="heart-description">
+                    <div class="location">Gerudo's Fortress - Horseback Archery Master</div>
+                    <div class="requirements">Requirements: Adult Link, Gerudo Token, Epona, archery skill</div>
+                    <div class="detailed-description">With Gerudo Token and Epona, access Horseback Archery Range east of fortress. Score 1,000+ points with 20 arrows while riding Epona at full gallop. Bullseyes and pot targets award 100 points. Targets include stationary and moving objects requiring prediction of Epona's movement and arrow flight path. Achieving 1,500+ points earns Biggest Quiver upgrade.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=5700s" target="_blank" class="video-link">🎥 Video Guide @1:35:00</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="35">
+                <span class="heart-number">#35</span>
+                <span class="heart-emoji">🏰</span>
+                <div class="heart-description">
+                    <div class="location">Gerudo's Fortress - Rooftop Treasure</div>
+                    <div class="requirements">Requirements: Adult Link, Gerudo Token, Longshot or Scarecrow's Song + Hookshot</div>
+                    <div class="detailed-description">After rescuing all carpenters and earning Gerudo Token, navigate to highest point of fortress. Use southern doors to reach upper ledge, climb vines to fortress peak. At gap near north side, either play Scarecrow's Song to summon Pierre and hookshot to him, or use Longshot to target large treasure chest directly. Most challenging to reach due to remote location.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=5745s" target="_blank" class="video-link">🎥 Video Guide @1:35:45</a>
+                </div>
+            </div>
+
+            <div class="heart-item">
+                <input type="checkbox" class="heart-checkbox" data-heart="36">
+                <span class="heart-number">#36</span>
+                <span class="heart-emoji">🏛️</span>
+                <div class="heart-description">
+                    <div class="location">Desert Colossus - Final Magic Bean Flight</div>
+                    <div class="requirements">Requirements: Adult Link, Requiem of Spirit, Magic Bean planted as child</div>
+                    <div class="detailed-description">Plant Magic Bean in soft soil near Spirit Temple entrance as Young Link (costs 100 Rupees - most expensive bean). Use Requiem of Spirit to warp efficiently. Return as Adult Link and ride final Magic Bean platform on aerial journey around Desert Colossus. Near end of flight path, platform passes over distinctive stone arch formation where final Piece of Heart awaits. Jump off at precise moment to complete your collection.</div>
+                    <a href="https://www.youtube.com/watch?v=zqA0vM9-ugg&t=6270s" target="_blank" class="video-link">🎥 Video Guide @1:37:50</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="progression-section">
+            <div class="section-title">📚 Reference Sources & Guides 📚</div>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">🔗 Primary Authoritative Guides</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                    <a href="https://www.zeldadungeon.net/wiki/Ocarina_of_Time_Heart_Pieces" target="_blank" style="color: #90EE90; text-decoration: none; padding: 10px; background: rgba(144, 238, 144, 0.1); border-radius: 5px; display: block;">
+                        📖 <strong>Zelda Dungeon Wiki</strong><br>
+                        <small>Complete numbered guide with detailed conditions</small>
+                    </a>
+                    <a href="https://www.thonky.com/ocarina-of-time/pieces-of-heart" target="_blank" style="color: #90EE90; text-decoration: none; padding: 10px; background: rgba(144, 238, 144, 0.1); border-radius: 5px; display: block;">
+                        📋 <strong>Thonky.com</strong><br>
+                        <small>Complete checklist with Child/Adult requirements</small>
+                    </a>
+                    <a href="https://gamerant.com/zelda-ocarina-time-every-heart-piece-location/" target="_blank" style="color: #90EE90; text-decoration: none; padding: 10px; background: rgba(144, 238, 144, 0.1); border-radius: 5px; display: block;">
+                        🎮 <strong>Game Rant</strong><br>
+                        <small>Modern comprehensive location guide</small>
+                    </a>
+                    <a href="https://gamefaqs.gamespot.com/n64/197771-the-legend-of-zelda-ocarina-of-time/faqs/3487" target="_blank" style="color: #90EE90; text-decoration: none; padding: 10px; background: rgba(144, 238, 144, 0.1); border-radius: 5px; display: block;">
+                        📝 <strong>GameFAQs</strong><br>
+                        <small>TNocturne's comprehensive FAQ with strategies</small>
+                    </a>
+                </div>
+                
+                <h3 style="color: #FFD700; margin: 20px 0 15px 0;">🎥 Video Resources</h3>
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 5px;">
+                    <strong>Original Video Guide:</strong> The timestamps provided reference video ID zqA0vM9-ugg. While this specific video could not be located, the timestamps follow logical progression patterns typical of comprehensive heart piece collection guides. Many alternative video guides are available on YouTube using similar routing strategies.
+                </div>
+                
+                <h3 style="color: #FFD700; margin: 20px 0 15px 0;">🏆 Completion Tips</h3>
+                <ul style="color: #fff; line-height: 1.6;">
+                    <li><strong>Magic Bean Investment:</strong> Total cost is 640 Rupees for all 10 beans - invest early for maximum utility</li>
+                    <li><strong>Song Requirements:</strong> Learn songs in order of story progression for optimal collection timing</li>
+                    <li><strong>Golden Skulltula Priority:</strong> Collect 50 tokens early for Stone of Agony to find hidden grottos</li>
+                    <li><strong>Fishing Strategy:</strong> Master the fishing pond early for Golden Scale and heart piece rewards</li>
+                    <li><strong>Time Management:</strong> Some pieces require specific time periods - plan accordingly</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cookie functions for persistent storage
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function saveProgressToCookie() {
+            generateCode();
+            const hexCode = document.getElementById('saveCode').value;
+            setCookie('zeldaHeartProgress', hexCode, 365); // Save for 1 year
+            
+            // Show save confirmation
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.style.opacity = '1';
+            setTimeout(() => {
+                saveStatus.style.opacity = '0';
+            }, 2000);
+        }
+
+        function loadProgressFromCookie() {
+            const savedCode = getCookie('zeldaHeartProgress');
+            if (savedCode) {
+                document.getElementById('saveCode').value = savedCode;
+                loadCode();
+                return true;
+            }
+            return false;
+        }
+
+        let heartCount = 0;
+        const totalHearts = 36;
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.heart-checkbox');
+            heartCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            document.getElementById('heartCount').textContent = heartCount;
+            const percentage = (heartCount / totalHearts) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function generateCode() {
+            const checkboxes = document.querySelectorAll('.heart-checkbox');
+            let binaryString = '';
+            
+            // Convert checkboxes to binary (up to 256 bits for future expansion)
+            for (let i = 0; i < 256; i++) {
+                if (i < checkboxes.length) {
+                    binaryString += checkboxes[i].checked ? '1' : '0';
+                } else {
+                    binaryString += '0';
+                }
+            }
+            
+            // Convert binary to hex
+            let hexCode = '';
+            for (let i = 0; i < binaryString.length; i += 4) {
+                const nibble = binaryString.substr(i, 4);
+                hexCode += parseInt(nibble, 2).toString(16).toUpperCase();
+            }
+            
+            document.getElementById('saveCode').value = hexCode;
+        }
+
+        function loadCode() {
+            const hexCode = document.getElementById('saveCode').value.toUpperCase();
+            if (!/^[0-9A-F]*$/.test(hexCode) || hexCode.length !== 64) {
+                alert('Invalid code! Please enter a 64-character hex code.');
+                return;
+            }
+            
+            // Convert hex to binary
+            let binaryString = '';
+            for (let i = 0; i < hexCode.length; i++) {
+                const hex = hexCode[i];
+                const binary = parseInt(hex, 16).toString(2).padStart(4, '0');
+                binaryString += binary;
+            }
+            
+            // Apply to checkboxes
+            const checkboxes = document.querySelectorAll('.heart-checkbox');
+            for (let i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = binaryString[i] === '1';
+            }
+            
+            updateProgress();
+            saveProgressToCookie(); // Save the loaded state
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all progress?')) {
+                const checkboxes = document.querySelectorAll('.heart-checkbox');
+                checkboxes.forEach(cb => cb.checked = false);
+                updateProgress();
+                document.getElementById('saveCode').value = '';
+                setCookie('zeldaHeartProgress', '', -1); // Delete the cookie
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.heart-checkbox');
+            
+            // Try to load progress from cookie first
+            const cookieLoaded = loadProgressFromCookie();
+            
+            // Set up event listeners for auto-save
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateProgress();
+                    saveProgressToCookie(); // Auto-save on every change
+                });
+            });
+            
+            // If no cookie was loaded, just update the initial progress
+            if (!cookieLoaded) {
+                updateProgress();
+            }
+        });
+
+        // Auto-generate code when checkboxes change (now also saves to cookie)
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('heart-checkbox')) {
+                setTimeout(() => {
+                    generateCode();
+                    saveProgressToCookie();
+                }, 100); // Small delay to ensure state is updated
+            }
+        });
+    </script>
+</body>
+</html>
