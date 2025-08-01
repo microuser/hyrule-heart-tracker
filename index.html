@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyrule Heart Tracker</title>
+    <title>🧝‍♂️ Micro's OOT Hyrule Heart Tracker 🗡️</title>
     <style>
         body {
             background: linear-gradient(45deg, #2d5016, #4a6741, #1a4c96);
@@ -237,7 +237,7 @@
         <div class="save-section">
             <div class="save-title">💾 Game Genie Save System 💾</div>
             <input type="text" id="saveCode" class="code-input" placeholder="Enter save code here or generate one from your progress...">
-            <div id="saveStatus" style="color: #90EE90; font-size: 0.8em; margin-top: 5px; opacity: 0; transition: opacity 0.3s;">✅ Progress automatically saved!</div>
+            <div id="saveStatus" style="color: #90EE90; font-size: 0.8em; margin-top: 5px; opacity: 0; transition: opacity 0.3s; text-align: center;">Ready to track your heart pieces!</div>
             <br>
             <button class="btn" onclick="generateCode()">🔮 Generate Code</button>
             <button class="btn" onclick="loadCode()">⚡ Load Code</button>
@@ -796,25 +796,61 @@
             return null;
         }
 
+        function showStatus(message, duration = 2000, color = '#90EE90') {
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.textContent = message;
+            saveStatus.style.color = color;
+            saveStatus.style.opacity = '1';
+            setTimeout(() => {
+                saveStatus.style.opacity = '0';
+            }, duration);
+        }
+
         function saveProgressToCookie() {
             generateCode();
             const hexCode = document.getElementById('saveCode').value;
             setCookie('zeldaHeartProgress', hexCode, 365); // Save for 1 year
-            
-            // Show save confirmation
-            const saveStatus = document.getElementById('saveStatus');
-            saveStatus.style.opacity = '1';
-            setTimeout(() => {
-                saveStatus.style.opacity = '0';
-            }, 2000);
+            showStatus('✅ Progress automatically saved!');
         }
 
         function loadProgressFromCookie() {
             const savedCode = getCookie('zeldaHeartProgress');
-            if (savedCode) {
+            if (savedCode && savedCode.length === 64) {
+                console.log('Loading saved progress from cookie...');
                 document.getElementById('saveCode').value = savedCode;
-                loadCode();
-                return true;
+                
+                // Convert hex to binary safely
+                try {
+                    let binaryString = '';
+                    for (let i = 0; i < savedCode.length; i++) {
+                        const hex = savedCode[i];
+                        const binary = parseInt(hex, 16).toString(2).padStart(4, '0');
+                        binaryString += binary;
+                    }
+                    
+                    // Apply to checkboxes
+                    const checkboxes = document.querySelectorAll('.heart-checkbox');
+                    for (let i = 0; i < checkboxes.length; i++) {
+                        checkboxes[i].checked = binaryString[i] === '1';
+                    }
+                    
+                    updateProgress();
+                    
+                    // Show load confirmation
+                    const saveStatus = document.getElementById('saveStatus');
+                    saveStatus.textContent = '✅ Progress loaded from previous session!';
+                    saveStatus.style.opacity = '1';
+                    setTimeout(() => {
+                        saveStatus.style.opacity = '0';
+                    }, 3000);
+                    
+                    console.log('Progress successfully loaded from cookie');
+                    return true;
+                } catch (error) {
+                    console.error('Error loading progress from cookie:', error);
+                    setCookie('zeldaHeartProgress', '', -1); // Clear corrupted cookie
+                    return false;
+                }
             }
             return false;
         }
@@ -852,12 +888,13 @@
             }
             
             document.getElementById('saveCode').value = hexCode;
+            showStatus('🔮 Save code generated!', 2000, '#FFD700');
         }
 
         function loadCode() {
             const hexCode = document.getElementById('saveCode').value.toUpperCase();
             if (!/^[0-9A-F]*$/.test(hexCode) || hexCode.length !== 64) {
-                alert('Invalid code! Please enter a 64-character hex code.');
+                showStatus('❌ Invalid code! Please enter a 64-character hex code.', 3000, '#FF6B6B');
                 return;
             }
             
@@ -876,7 +913,8 @@
             }
             
             updateProgress();
-            saveProgressToCookie(); // Save the loaded state
+            setCookie('zeldaHeartProgress', hexCode, 365); // Save the loaded state to cookie
+            showStatus('✅ Code loaded successfully!', 2000, '#90EE90');
         }
 
         function clearAll() {
@@ -886,38 +924,38 @@
                 updateProgress();
                 document.getElementById('saveCode').value = '';
                 setCookie('zeldaHeartProgress', '', -1); // Delete the cookie
+                showStatus('🗑️ All progress cleared', 2000, '#FF6B6B');
             }
         }
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.heart-checkbox');
+            console.log('Page loaded, initializing tracker...');
             
-            // Try to load progress from cookie first
-            const cookieLoaded = loadProgressFromCookie();
-            
-            // Set up event listeners for auto-save
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    updateProgress();
-                    saveProgressToCookie(); // Auto-save on every change
+            // Small delay to ensure all elements are fully rendered
+            setTimeout(() => {
+                const checkboxes = document.querySelectorAll('.heart-checkbox');
+                console.log(`Found ${checkboxes.length} heart piece checkboxes`);
+                
+                // Try to load progress from cookie first
+                const cookieLoaded = loadProgressFromCookie();
+                
+                if (!cookieLoaded) {
+                    console.log('No saved progress found, starting fresh');
+                    updateProgress(); // Initialize progress display
+                }
+                
+                // Set up event listeners for auto-save
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.addEventListener('change', function() {
+                        console.log(`Heart piece #${index + 1} toggled: ${this.checked}`);
+                        updateProgress();
+                        saveProgressToCookie();
+                    });
                 });
-            });
-            
-            // If no cookie was loaded, just update the initial progress
-            if (!cookieLoaded) {
-                updateProgress();
-            }
-        });
-
-        // Auto-generate code when checkboxes change (now also saves to cookie)
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('heart-checkbox')) {
-                setTimeout(() => {
-                    generateCode();
-                    saveProgressToCookie();
-                }, 100); // Small delay to ensure state is updated
-            }
+                
+                console.log('Tracker initialization complete');
+            }, 100);
         });
     </script>
 </body>
